@@ -11,11 +11,31 @@
     <p id="result"></p>
     <script>
         async function addNumbers() {
+            // Get the input values
             const a = document.getElementById('a').value;
             const b = document.getElementById('b').value;
-            const response = await fetch(`http://127.0.0.1:5000/add?a=${a}&b=${b}`);
-            const data = await response.json();
-            document.getElementById('result').innerText = data.result || data.error;
+
+            // Check if values are entered
+            if (!a || !b) {
+                document.getElementById('result').innerText = "Please enter both numbers.";
+                return;
+            }
+
+            try {
+                // Make a GET request to the Flask API
+                const response = await fetch(`http://127.0.0.1:5000/add?a=${a}&b=${b}`);
+                const data = await response.json();
+
+                // Display the result
+                if (response.ok) {
+                    document.getElementById('result').innerText = `Result: ${data.result}`;
+                } else {
+                    document.getElementById('result').innerText = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerText = "Error connecting to the server.";
+                console.error(error);
+            }
         }
     </script>
 </body>
